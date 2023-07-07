@@ -1,0 +1,8 @@
+Enemies:
+    swat teams who are the normal enemies
+    soldiers who have guns and can slow you down if you get shot
+    police cars that are faster and take multiple hits
+    army jeeps that are police cars with guns essentially
+    exterminators who move faster and give you a score multipliyer.
+
+    
