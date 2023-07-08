@@ -5,7 +5,7 @@ using Raylib_CsLo;
 
 public sealed class SwatUnit : IEntity
 {
-    const int speed = 1;
+    const float speed = 1.5f;
     public const int size = 50;
     public Vector2 pos;
     float angle;

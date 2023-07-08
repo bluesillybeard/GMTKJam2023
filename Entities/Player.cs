@@ -5,7 +5,7 @@ using Raylib_CsLo;
 
 public sealed class Player : IEntity
 {
-    const float speed = 4;
+    const float speed = 10;
     const float rotationSpeed = 4;
     const int size = 80;
 
