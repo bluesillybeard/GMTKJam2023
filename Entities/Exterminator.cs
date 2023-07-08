@@ -1,16 +1,14 @@
-using System.Data;
 using System.Numerics;
-using System.Security.AccessControl;
 using Raylib_CsLo;
 
-public sealed class SwatUnit : IEntity
+public sealed class Exterminator : IEntity
 {
     const int speed = 1;
     public const int size = 50;
     public Vector2 pos;
     float angle;
     float health;
-    public SwatUnit(Vector2 pos)
+    public Exterminator(Vector2 pos)
     {
         this.pos = pos;
         //This is so that swats spawned in the same frame don't walk in sync
@@ -21,7 +19,7 @@ public sealed class SwatUnit : IEntity
     static readonly Rectangle[] AnimRects = new Rectangle[]{new Rectangle(0, 1, 17, 14), new Rectangle(18, 1, 17, 14), new Rectangle(36, 1, 17, 14), new Rectangle(18, 1, 17, 14)};
     public void Draw()
     {
-        var texture = AssetManager.GetTexture("FlySwatter-HumanSpriteSheet.png");
+        var texture = AssetManager.GetTexture("FlySwatter-HumanExterminatorSpriteSheet.png");
         Rectangle anim = AnimRects[(step/10) % 4];
         Raylib.DrawTexturePro(texture, anim, new Rectangle(pos.X, pos.Y, size, size), new Vector2(size/2, size/2), angle, Raylib.WHITE);
     }
