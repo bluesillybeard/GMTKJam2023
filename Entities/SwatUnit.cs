@@ -18,7 +18,7 @@ public sealed class SwatUnit : IEntity
         health = 100;
     }
     int step;
-    static readonly Rectangle[] AnimRects = new Rectangle[]{new Rectangle(0, 1, 18, 14), new Rectangle(17, 1, 18, 14), new Rectangle(36, 1, 18, 14), new Rectangle(17, 1, 17, 14)};
+    static readonly Rectangle[] AnimRects = new Rectangle[]{new Rectangle(0, 1, 17, 14), new Rectangle(18, 1, 17, 14), new Rectangle(36, 1, 17, 14), new Rectangle(18, 1, 17, 14)};
     public void Draw()
     {
         var texture = AssetManager.GetTexture("FlySwatter-HumanSpriteSheet.png");
@@ -36,8 +36,9 @@ public sealed class SwatUnit : IEntity
         step++;
         var factory = m.FindEntity<SewageFactory>();
         //Move towards the factory
-        var factoryPos = new Vector2(factory?.pos.X ?? 0, factory?.pos.Y ?? 0);
         var factoryRect = factory?.pos ?? new Rectangle(-20, -20, 20, 20);
+        var factoryPos = new Vector2(factoryRect.X + factoryRect.width/2, factoryRect.Y + factoryRect.height/2);
+        
         var factoryRectExpanded = new Rectangle(factoryRect.x-size/2, factoryRect.y-size/2, factoryRect.width+size, factoryRect.height+size);
         Vector2 moveDirection = factoryPos - pos;
         moveDirection = Vector2.Normalize(moveDirection);

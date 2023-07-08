@@ -25,7 +25,7 @@ public sealed class MainGameScene : IScene
         camera.target = entities.FindEntity<Player>()?.pos ?? Vector2.Zero;
 
         float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
-        Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 1000;
+        Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 2000;
         entities.AddEntity(new SwatUnit(randomPos));
         if(nextScene != this)
         {
