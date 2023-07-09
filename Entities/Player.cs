@@ -66,14 +66,15 @@ public sealed class Player : IEntity
             {
                 swatAnimationCooldown = 3;
                 swat.TakeDamage(100);
+                Raylib.PlaySound(AssetManager.GetSound("Swat.wav"));
             }
             if(entity is Exterminator exterminator && (pos - exterminator.pos).Length() <= (size + SwatUnit.size)/2)
             {
                 swatAnimationCooldown = 3;
                 exterminator.TakeDamage(100);
+                Raylib.PlaySound(AssetManager.GetSound("Swat.wav"));
             }
         }
-        
         //heal the factory if the player is over it
         if(Raylib.CheckCollisionPointRec(this.pos, (factory?.pos) ?? new Rectangle(0, 0, 50, 50)))
         {

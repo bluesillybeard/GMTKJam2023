@@ -21,5 +21,6 @@ public sealed class SewageFactory : IEntity
     public void TakeDamage(float damage)
     {
         health -= damage;
+        health = MathF.Min(health, startHealth);
     }
 }

@@ -1,6 +1,7 @@
 //Humans, enemy because that's more generic
 using System.Globalization;
 using System.Numerics;
+using System.Xml.Schema;
 using Raylib_CsLo;
 
 public sealed class MainGameScene : IScene
@@ -10,9 +11,9 @@ public sealed class MainGameScene : IScene
     public static readonly float[][] waveDifficulties = 
     new float[][]{
         new float[12]{10, 5, 3, 1, 0.5f, 0.25f, 0.15f, 0.1f, 0.07f, 0.03f, 0.01f, 0f},
-        new float[12]{15, 10, 7, 5, 4, 3, 2, 1, 0.9f, 0.8f, 0.7f, 0.6f},
-        new float[12]{15, 12, 8, 7, 6, 5, 3, 4, 3, 1, 0.9f, 0.8f},
-        new float[12]{20, 15, 10, 7, 7, 5, 5, 3, 3, 2, 2, 1},
+        new float[12]{12, 10, 8, 7, 5, 4, 3, 2, 1.8f, 1.3f, 1, 0.5f},
+        new float[12]{17, 15, 10, 8, 8, 7, 5, 5, 3, 3, 1, 1},
+        new float[12]{20, 18, 15, 12, 10, 9, 9, 8, 8, 7, 6, 5},
     };
 
     int difficulty;
@@ -30,7 +31,7 @@ public sealed class MainGameScene : IScene
         entities.AddEntity(new Player());
         step = 0;
         float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
-        Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 7000;
+        Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 5500;
         entities.AddEntity(new Exterminator(randomPos + new Vector2(Random.Shared.NextSingle(), Random.Shared.NextSingle()) * 150));
     }
     public IScene Update()
@@ -40,24 +41,27 @@ public sealed class MainGameScene : IScene
         camera.offset = new Vector2(Raylib.GetRenderWidth()/2, Raylib.GetRenderHeight()/2);
         entities.Step();
         camera.target = entities.FindEntity<Player>()?.pos ?? Vector2.Zero;
-        if((int)(step % 60*waveDifficulties[difficulty][wave]) == 0)
+        if(wave < 12)
         {
-            float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
-            Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 5000;
-            for(int i=0; i<2; i++)
+            if((int)(step % (60*waveDifficulties[difficulty][wave])) == 0)
             {
-                entities.AddEntity(new SwatUnit(randomPos + new Vector2(Random.Shared.NextSingle(), Random.Shared.NextSingle()) * 150));
+                float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
+                Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 5500;
+                for(int i=0; i<2; i++)
+                {
+                    entities.AddEntity(new SwatUnit(randomPos + new Vector2(Random.Shared.NextSingle(), Random.Shared.NextSingle()) * 150));
+                }
+                
             }
-            
-        }
-        //TODO: spawn frequency of exterminators
-        if(step % (60*10) == 0)
-        {
-            float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
-            Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 5000;
-            for(int i=0; i<1; i++)
+            //TODO: spawn frequency of exterminators
+            if(step % (60*10) == 0)
             {
-                entities.AddEntity(new Exterminator(randomPos + new Vector2(Random.Shared.NextSingle(), Random.Shared.NextSingle()) * 150));
+                float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
+                Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 5500;
+                for(int i=0; i<1; i++)
+                {
+                    entities.AddEntity(new Exterminator(randomPos + new Vector2(Random.Shared.NextSingle(), Random.Shared.NextSingle()) * 150));
+                }
             }
         }
         //12 waves over the span of 10 minutes = 50 seconds per wave
@@ -65,7 +69,14 @@ public sealed class MainGameScene : IScene
         {
             System.Console.WriteLine("wave" + wave);
             wave++;
-            if(wave == 12)
+        }
+        if(wave >= 12)
+        {
+            //If there no more enemy units
+            if(
+            entities.FindEntity<SwatUnit>() == null
+            // && entities.FindEntity<Exterminator>() == null
+            )
             {
                 nextScene = new WinGameScreen(entities, camera);
             }
