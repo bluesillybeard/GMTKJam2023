@@ -26,12 +26,34 @@ public sealed class SwatUnit : IEntity
         Raylib.DrawTexturePro(texture, anim, new Rectangle(pos.X, pos.Y, size, size), new Vector2(size/2, size/2), angle, Raylib.WHITE);
     }
 
+    public static readonly string[] sounds = {"HumanSpeech.wav", "Human_Speech_2.wav", "Human_Speech_3.wav"};
     public void Step(EntityManager m)
     {
+        if(Random.Shared.NextSingle() < 0.005f)
+        {
+            var player = m.FindEntity<Player>();
+            var playerPos = player?.pos ?? Vector2.Zero;
+            var distance = Vector2.Distance(playerPos, this.pos);
+            if(distance < 2000)
+            {
+                var random = (int)Random.Shared.NextSingle() * sounds.Length;
+                Raylib.SetSoundVolume(AssetManager.GetSound(sounds[random]), 100000 / (distance*distance));
+                Raylib.PlaySound(AssetManager.GetSound(sounds[random]));
+            }
+            
+        }
         if(health <= 0)
         {
             m.RemoveEntity(this);
             m.AddEntityFirst(new DeadUnit(AssetManager.GetTexture("FlySwatter-HumanSpriteSheet.png"), new Rectangle(53, 1, 20, 18) ,new Rectangle(pos.X, pos.Y, size, size)));
+            var player = m.FindEntity<Player>();
+            var playerPos = player?.pos ?? Vector2.Zero;
+            var distance = Vector2.Distance(playerPos, this.pos);
+            if(distance < 2000)
+            {
+                Raylib.SetSoundVolume(AssetManager.GetSound("HumanScream.wav"), 100000 / (distance*distance));
+                Raylib.PlaySound(AssetManager.GetSound("HumanScream.wav"));
+            }
             return;
         }
         step++;

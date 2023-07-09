@@ -50,6 +50,19 @@ public sealed class Exterminator : IEntity
     }
     public void Step(EntityManager m)
     {
+        if(Random.Shared.NextSingle() < 0.005f)
+        {
+            var player = m.FindEntity<Player>();
+            var playerPos = player?.pos ?? Vector2.Zero;
+            var distance = Vector2.Distance(playerPos, this.pos);
+            if(distance < 2000)
+            {
+                var random = (int)Random.Shared.NextSingle() * SwatUnit.sounds.Length;
+                Raylib.SetSoundVolume(AssetManager.GetSound(SwatUnit.sounds[random]), 100000 / (distance*distance));
+                Raylib.PlaySound(AssetManager.GetSound(SwatUnit.sounds[random]));
+            }
+            
+        }
         if(health <= 0)
         {
             m.RemoveEntity(this);

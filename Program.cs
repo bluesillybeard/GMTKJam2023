@@ -15,12 +15,14 @@ public static class Program
         {
             //Raylib.PollInputEvents();
             scene = scene.Update();
+            AssetManager.Update();
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BLACK);
             scene.Frame();
             Raylib.EndDrawing();
         }
         scene?.Dispose();
+        AssetManager.Dispose();
         Raylib.CloseWindow();
     }
 }

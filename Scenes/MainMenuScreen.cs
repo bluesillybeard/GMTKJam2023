@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Raylib_CsLo;
 
 public sealed class MainMenuScreen : IScene
@@ -17,18 +18,43 @@ public sealed class MainMenuScreen : IScene
     static readonly Rectangle logo = new Rectangle(1240/2 - logoSize/2, 60, logoSize, logoSize*39/149);
     static readonly Rectangle logoSrc = new Rectangle(41, 328, 149, 39);
     static readonly Vector2 howToPlayText = new Vector2(0, 30);
+
+    bool introPlayed = false;
+    public MainMenuScreen()
+    {
+        var music = AssetManager.GetMusic("Fly_Swatter_Intro.wav");
+        Raylib.SetMusicPitch(music, 1);
+        Raylib.SetMusicVolume(music, 5);
+        //pre load it so its ready to be played
+        AssetManager.GetMusic("Fly_Swatter_Theme.wav");
+
+        Raylib.PlayMusicStream(music);
+    }
     public IScene Update()
     {
+
         Vector2 cursorPos = Raylib.GetMousePosition();
         if(Raylib.CheckCollisionPointRec(cursorPos, playButton) && Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
         {
             System.Console.WriteLine("Difficulty " + difficulty);
+            Raylib.StopMusicStream(AssetManager.GetMusic("Fly_Swatter_Theme.wav"));
+            Raylib.StopMusicStream(AssetManager.GetMusic("Fly_Swatter_Intro.wav"));
             return new MainGameScene(difficulty);
         }
 
         if(Raylib.CheckCollisionPointRec(cursorPos, difficultyButton) && Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
         {
             difficulty = (difficulty+3)%4;
+        }
+        var intro = AssetManager.GetMusic("Fly_Swatter_Intro.wav");
+        if(!introPlayed && Raylib.GetMusicTimePlayed(intro) >= Raylib.GetMusicTimeLength(intro))
+        {
+            introPlayed = true;
+            var music = AssetManager.GetMusic("Fly_Swatter_Theme.wav");
+            Raylib.SetMusicPitch(music, 1);
+            Raylib.SetMusicVolume(music, 5);
+            music.looping = true;
+            Raylib.PlayMusicStream(music);
         }
         return this;
     }

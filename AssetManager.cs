@@ -39,6 +39,14 @@ public static class AssetManager
         return music;
     }
 
+    public static void Update()
+    {
+        foreach(var music in musics.Values)
+        {
+            Raylib.UpdateMusicStream(music);
+        }
+    }
+
     public static void Dispose()
     {
         foreach(var texture in textures.Values)
