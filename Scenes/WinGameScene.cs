@@ -35,7 +35,7 @@ public sealed class WinGameScreen : IScene
         //Don't update entities (for now)
         if(Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), exitButtonBox) && Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
         {
-            return new MainGameScene();
+            return new MainMenuScreen();
         }
         return this;
     }

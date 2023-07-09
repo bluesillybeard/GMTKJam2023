@@ -7,32 +7,31 @@ public sealed class MainGameScene : IScene
 {
     int step;
     int wave;
-    float[] waveDifficultiesInsane = new float[12]{10, 5, 3, 1, 0.5f, 0.25f, 0.15f, 0.1f, 0.07f, 0.03f, 0.01f, 0f};
+    public static readonly float[][] waveDifficulties = 
+    new float[][]{
+        new float[12]{10, 5, 3, 1, 0.5f, 0.25f, 0.15f, 0.1f, 0.07f, 0.03f, 0.01f, 0f},
+        new float[12]{15, 10, 7, 5, 4, 3, 2, 1, 0.9f, 0.8f, 0.7f, 0.6f},
+        new float[12]{15, 12, 8, 7, 6, 5, 3, 4, 3, 1, 0.9f, 0.8f},
+        new float[12]{20, 15, 10, 7, 7, 5, 5, 3, 3, 2, 2, 1},
+    };
 
-
-    float[] waveDifficultiesHard = new float[12]{15, 10, 7, 5, 4, 3, 2, 1, 0.9f, 0.8f, 0.7f, 0.6f};
-    float[] waveDifficultiesMedium = new float[12]{15, 12, 8, 7, 6, 5, 3, 4, 3, 1, 0.9f, 0.8f};
-
-    float[] waveDifficultiesEasy = new float[12]{20, 15, 10, 7, 7, 5, 5, 3, 3, 2, 2, 1};
-
+    int difficulty;
     IScene nextScene;
     Camera2D camera;
     EntityManager entities;
 
-    public MainGameScene()
+    public MainGameScene(int difficulty)
     {
+        this.difficulty = difficulty;
         entities = new EntityManager();
         camera = new Camera2D();
         nextScene = this;
         entities.AddEntity(new SewageFactory());
         entities.AddEntity(new Player());
         step = 0;
-
         float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
         Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 7000;
         entities.AddEntity(new Exterminator(randomPos + new Vector2(Random.Shared.NextSingle(), Random.Shared.NextSingle()) * 150));
-
-        
     }
     public IScene Update()
     {
@@ -41,7 +40,7 @@ public sealed class MainGameScene : IScene
         camera.offset = new Vector2(Raylib.GetRenderWidth()/2, Raylib.GetRenderHeight()/2);
         entities.Step();
         camera.target = entities.FindEntity<Player>()?.pos ?? Vector2.Zero;
-        if((int)(step % 60*waveDifficultiesInsane[wave]) == 0)
+        if((int)(step % 60*waveDifficulties[difficulty][wave]) == 0)
         {
             float randomAngle = Random.Shared.NextSingle() * 2*MathF.PI;
             Vector2 randomPos = new Vector2(MathF.Sin(randomAngle), MathF.Cos(randomAngle)) * 5000;
