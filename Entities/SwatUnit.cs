@@ -31,6 +31,7 @@ public sealed class SwatUnit : IEntity
         if(health <= 0)
         {
             m.RemoveEntity(this);
+            m.AddEntityFirst(new DeadUnit(AssetManager.GetTexture("FlySwatter-HumanSpriteSheet.png"), new Rectangle(53, 1, 20, 18) ,new Rectangle(pos.X, pos.Y, size, size)));
             return;
         }
         step++;

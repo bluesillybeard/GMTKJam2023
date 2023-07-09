@@ -51,8 +51,14 @@ public sealed class Player : IEntity
         {
             movement *= 3;
         }
-        pos += movement * new Vector2(MathF.Sin(angle * MathF.PI/180), -MathF.Cos(angle * MathF.PI/180)) * speed;
-
+        var newPos = pos + movement * new Vector2(MathF.Sin(angle * MathF.PI/180), -MathF.Cos(angle * MathF.PI/180)) * speed;
+        var factory = m.FindEntity<SewageFactory>();
+        var factoryRect = factory?.pos ?? new Rectangle(-20, -20, 20, 20);
+        var factoryPos = new Vector2(factoryRect.X + factoryRect.width/2, factoryRect.Y + factoryRect.height/2);
+        if(Vector2.Distance(newPos, factoryPos) < 5000)
+        {
+            pos = newPos;
+        }
         //hit any units below the player
         foreach(var entity in m.Entities)
         {
@@ -69,7 +75,6 @@ public sealed class Player : IEntity
         }
         
         //heal the factory if the player is over it
-        var factory = m.FindEntity<SewageFactory>();
         if(Raylib.CheckCollisionPointRec(this.pos, (factory?.pos) ?? new Rectangle(0, 0, 50, 50)))
         {
             factory?.TakeDamage(-1);

@@ -30,18 +30,34 @@ public sealed class Exterminator : IEntity
 
     private void MakeNewTargetPos(Rectangle factoryRectExpanded, Vector2 factoryPos)
     {
+        bool b2, b3;
+        int iterations = 0;
         do
         {
             targetPos = speed * 60*10*Vector2.Normalize(new Vector2(Random.Shared.NextSingle()-0.5f, Random.Shared.NextSingle()-0.5f));
             targetPos += pos;
-        }while(Raylib.CheckCollisionPointRec(targetPos, factoryRectExpanded) && Vector2.Distance(targetPos, factoryPos) > 800 && Vector2.Distance(targetPos, factoryPos) < 4000);
+
+            
+            b2 = Vector2.Distance(targetPos, factoryPos) < 3000;
+            b3 = Vector2.Distance(targetPos, factoryPos) > 5000;
+            iterations++;
+            if(iterations > 100)
+            {
+                targetPos = Vector2.Zero;
+                break;
+            }
+        }while(b2 || b3);
     }
     public void Step(EntityManager m)
     {
         if(health <= 0)
         {
             m.RemoveEntity(this);
-            m.AddEntity(new HelperFly(this.pos));
+            for(int i=0; i<flies; i++)
+            {
+                m.AddEntity(new HelperFly(this.pos));
+            }
+            m.AddEntityFirst(new DeadUnit(AssetManager.GetTexture("FlySwatter-HumanExterminatorSpriteSheet.png"), new Rectangle(53, 1, 20, 18) ,new Rectangle(pos.X, pos.Y, size, size)));
             return;
         }
         step++;
